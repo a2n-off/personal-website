@@ -1,0 +1,48 @@
+#nav, #hero, #project, #about, #sideProject, #contact {
+    /*display: none;*/
+}
+
+#number {
+    color: var(--sec-color);
+    font-size: 5.61rem;
+    grid-column: 9/10;
+}
+
+#loader {
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--pri-color);
+    position: absolute;
+    bottom: 0;
+    z-index: 999;
+}
+
+#grid-loader {
+    height: 100%;
+}
+
+.loader-col {
+    content: '';
+    border-right: 1px solid white;
+    border-left: 1px solid white;
+    height: 0;
+    display: inline-block;
+    transition: all 0.3s;
+}
+
+.loader-col.loaded {
+    height: 100%;
+}
+
+#loader.animate {
+    animation: expandHeight 1s forwards;
+}
+
+@keyframes expandHeight {
+    from {
+        height: 100vh;
+    }
+    to {
+        height: 0;
+    }
+}
