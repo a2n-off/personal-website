@@ -1,11 +1,11 @@
-#nav, #hero, #project, #about, #sideProject, #contact {
-    /*display: none;*/
+.animate-text {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
 }
 
-#number {
-    color: var(--sec-color);
-    font-size: 5.61rem;
-    grid-column: 9/10;
+.letter {
+    display: inline-block;
+    transform: translateY(200px);
+    visibility: hidden; /* for avoiding flash effect */
 }
 
 #loader {
@@ -14,11 +14,13 @@
     background-color: var(--pri-color);
     position: absolute;
     bottom: 0;
-    z-index: 999;
+    z-index: 1;
 }
 
 #grid-loader {
     height: 100%;
+    position: fixed;
+    z-index: -1;
 }
 
 .loader-col {
@@ -27,22 +29,4 @@
     border-left: 1px solid white;
     height: 0;
     display: inline-block;
-    transition: all 0.3s;
-}
-
-.loader-col.loaded {
-    height: 100%;
-}
-
-#loader.animate {
-    animation: expandHeight 1s forwards;
-}
-
-@keyframes expandHeight {
-    from {
-        height: 100vh;
-    }
-    to {
-        height: 0;
-    }
 }
