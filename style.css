@@ -66,10 +66,10 @@ a.hovered > span::before, #email.hovered::before {
     width: 80%;
 }
 
-@media (max-width: 768px) {
-    .grid-container {
-        grid-template-columns: repeat(10, 1fr);
-    }
+/* background grid */
+.container {
+    margin: 0 auto;
+    width: 80%;
 }
 
 /* noise */
@@ -159,12 +159,6 @@ a.hovered > span::before, #email.hovered::before {
     }
 }
 
-/* background grid */
-.container {
-    margin: 0 auto;
-    width: 80%;
-}
-
 #bck {
     position: fixed;
     z-index: -1;
@@ -217,12 +211,12 @@ a.hovered > span::before, #email.hovered::before {
 /* hero section */
 .alan {
     grid-column: 9/-1;
-    font-size: 10rem;
+    font-size: 9rem;
 }
 
 .bouteiller {
     grid-column: 2/-1;
-    font-size: 10rem;
+    font-size: 9rem;
 }
 
 #title > h5 {

@@ -1,0 +1,42 @@
+/* small screen */
+@media (max-width: 1170px) {
+    .grid-container {
+        margin: 0;
+        width: 100%;
+    }
+
+    .container {
+        margin: 0;
+        width: 100%;
+    }
+
+    #nav, #hero, #project, #about, #sideProject, #contact {
+        padding: 0 15px;
+    }
+
+    .pos {
+        grid-column: 7/9;
+    }
+
+    #nav > .grid-container > nav {
+        grid-column: 10/12;
+    }
+
+    /* hero section */
+    .alan {
+        grid-column: 7/-1;
+    }
+}
+
+/* mobile */
+@media (max-width: 768px) {
+    .grid-container {
+        grid-template-columns: repeat(10, 1fr);
+        margin: 0;
+        width: 100%;
+    }
+    .container {
+        margin: 0;
+        width: 100%;
+    }
+}
