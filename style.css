@@ -79,7 +79,7 @@ a.hovered > span::before, #email.hovered::before {
 
 #noise::before {
     content: '';
-    opacity: 0.6;
+    opacity: 0.4;
     position: absolute;
     top: 0;
     left: 0;
@@ -189,6 +189,9 @@ a.hovered > span::before, #email.hovered::before {
     width: 100%;
     backdrop-filter: blur(var(--blur-value));
     padding-top: 15px;
+    /*anim*/
+    transform: translateY(-85px);
+    visibility: hidden;
 }
 
 .version {
@@ -225,6 +228,12 @@ a.hovered > span::before, #email.hovered::before {
 }
 
 /* bottom section */
+#bottom {
+    /*anim*/
+    transform: translateY(3rem); /* 3 line of p */
+    visibility: hidden;
+}
+
 .indic {
     grid-column: 1/1;
     text-align: left;
@@ -279,7 +288,7 @@ a.hovered > span::before, #email.hovered::before {
 }
 
 #project > .work > ul > li {
-    list-style: disc inside;
+    /*list-style: disc inside;*/
 }
 
 /* about me */

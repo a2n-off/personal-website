@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         requestAnimationFrame(raf)
 
-        lenis.scrollTo(0, {immediate: true, force:true}) // on reload the page is at the top
+        // lenis.scrollTo(0, {immediate: true, force:true}) // on reload the page is at the top
 
         return lenis;
     }
@@ -145,10 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     tooltips();
 
-    function loaderAnimation() {
-        // set the bck to dark for avoiding flash at start
-        document.body.style.backgroundColor = 'var(--pri-color)';
-
+    function animation() {
         // block the scroll
         lenis.stop();
 
@@ -160,13 +157,16 @@ document.addEventListener('DOMContentLoaded', function() {
         // get all the elem for the starting animation
         const nav = document.getElementById('nav');
         const loader = document.getElementById('loader');
+        const bottom = document.getElementById('bottom');
         const gridLoader = document.getElementById('grid-loader');
-        const nbOfCol = window.getComputedStyle(gridLoader).getPropertyValue('grid-template-columns').split(' ').length;
+        const intro = document.getElementById('intro');
         const name = document.getElementById('name');
         const lastname = document.getElementById('lastname');
 
+        const nbOfCol = window.getComputedStyle(gridLoader).getPropertyValue('grid-template-columns').split(' ').length;
+
         let tlmain = gsap.timeline();
-        let tla = gsap.timeline();
+        let colEntrance = gsap.timeline();
 
         /* add the col and animate the entrance */
         for (let i = 0; i < nbOfCol; i++) {
@@ -174,53 +174,118 @@ document.addEventListener('DOMContentLoaded', function() {
             loaderCol.classList.add('loader-col');
             loaderCol.classList.add(`c${i}`);
             const newChildRef = gridLoader.appendChild(loaderCol);
-            tla.to(newChildRef, {height: '100%', duration: baseDuration}, (baseDelay/2)*i);
+            colEntrance.to(newChildRef, {height: '100%', duration: baseDuration}, (baseDelay/2)*i);
         }
 
         /* setup the text */
         name.innerHTML = name.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
-        name.style.color = 'var(--sec-color)';
         name.style.zIndex = '1';
 
         lastname.innerHTML = lastname.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
-        lastname.style.color = 'var(--sec-color)';
         lastname.style.zIndex = '1';
 
         /* animate  the text */
-        let tlb = gsap.timeline();
+        let nameEntrance = gsap.timeline();
         name.childNodes.forEach((e, i) => {
             if (i === 0) {
-                tlb.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'});
+                nameEntrance.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'});
             } else {
-                tlb.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'}, `<${0.03}`);
+                nameEntrance.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'}, `<${0.03}`);
             }
         })
 
-        let tlc = gsap.timeline();
+        let lastnameEntrance = gsap.timeline();
         lastname.childNodes.forEach((e, i) => {
             if (i === 0) {
-                tlc.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'});
+                lastnameEntrance.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'});
             } else {
-                tlc.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'}, `<${0.03}`);
+                lastnameEntrance.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'}, `<${0.03}`);
             }
         })
 
         /* fade all the elements */
-        let tld = gsap.timeline();
-        tld.to(loader, {autoAlpha: 0, duration: baseDuration*3, ease: 'expoScale(0.5,7,none)', onComplete: () => {
-                // reset all the main element
-                nav.style.zIndex = 2; /* no idea why I need this to have my blur working but since it work ... */
-                lenis.start();
-                loader.remove();
-            }}, 'dstart')
-        tld.to(name, {color: '#000', duration: baseDuration*3, ease: 'expoScale(0.5,7,none)'}, 'dstart'); // HACK the color anim doesn't work w/ var ...
-        tld.to(lastname, {color: '#000', duration: baseDuration*3, ease: 'expoScale(0.5,7,none)'}, 'dstart');
+        let loaderFading = gsap.timeline();
+        loaderFading.to(loader, {autoAlpha: 0, duration: baseDuration, ease: 'expoScale(0.5,7,none)', onComplete: () => {
+            // reset all the main element
+            nav.style.zIndex = 2; /* no idea why I need this to have my blur working but since it work ... */
+            lenis.start();
+            loader.remove();
+        }})
 
-        /* reset the body color */
-        document.body.style.backgroundColor = 'var(--sec-color)';
+        /* animate the rest of the hero block */
+        let navEntrance = gsap.timeline();
+        navEntrance.to(nav, {autoAlpha: 1, y: 0, stagger: 0.05, duration: baseDuration, ease: 'expoScale(0.5,7,none)'});
+
+        let bottomEntrance = gsap.timeline();
+        bottomEntrance.to(bottom, {autoAlpha: 1, y: 0, stagger: 0.05, duration: baseDuration, ease: 'expoScale(0.5,7,none)'});
+
+        let introEntrance = gsap.timeline();
+        const introWords = intro.textContent.split(' ');
+        intro.innerHTML = introWords.map(word => `<span class='letter'>${word}</span>`).join(' ');
+        intro.childNodes.forEach((e, i) => {
+            if (i === 0) {
+                introEntrance.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'});
+            } else {
+                introEntrance.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'}, `<${0.03}`);
+            }
+        })
+
+        /* get all the other text to animate */
+        const textHC = document.getElementsByClassName('animate-text-hc');
+        const titleHC = document.getElementsByClassName('animate-title-hc');
+
+        Array.from(titleHC).forEach((el, i) => {
+            el.innerHTML = el.textContent.replace(/\S/g, "<span class='animated-letter'>$&</span>");
+            let tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: el,
+                    start: 'top 90%',
+                    scrub: false,
+                    toggleAction: 'play',
+                    markers: false
+                }
+            });
+            el.childNodes.forEach((e, i) => {
+                if (i === 0) {
+                    tl.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: baseDuration, ease: 'expoScale(0.5,7,none)'});
+                } else {
+                    tl.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: baseDuration, ease: 'expoScale(0.5,7,none)'}, `<${0.03}`);
+                }
+            })
+        })
+
+        Array.from(textHC).forEach((el, i) => {
+            const elWords = el.textContent.split(' ');
+            el.innerHTML = elWords.map(word => `<span class='animated-word'>${word}</span>`).join(' ');
+            let tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: el,
+                    start: 'top 90%',
+                    scrub: false,
+                    toggleAction: 'play',
+                    markers: false
+                }
+            });
+            el.childNodes.forEach((e, i) => {
+                if (i === 0) {
+                    tl.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: baseDuration, ease: 'expoScale(0.5,7,none)'});
+                } else {
+                    tl.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: baseDuration, ease: 'expoScale(0.5,7,none)'}, `<${0.03/elWords.length}`);
+                }
+            })
+        })
+
         /* add all the secondary timeline to the main */
-        tlmain.add(tla).add(tlb, 'start').add(tlc, 'start').add(tld);
+        tlmain
+            .add(colEntrance,      'seqA')
+            .add(nameEntrance,     'seqB')
+            .add(lastnameEntrance, 'seqB')
+            .add(loaderFading,     'seqC')
+            .add(navEntrance,      'seqC')
+            .add(bottomEntrance,   'seqC')
+            .add(introEntrance,    'seqC')
+        ;
     }
-    loaderAnimation();
+    animation();
 
 });
