@@ -1,24 +1,22 @@
-/* Par défaut pour les écrans de 1280px */
+/* FONT SIZE */
 html {
     font-size: 16px;
 }
 
-/* Pour les écrans de 1440px */
 @media (min-width: 1440px) {
     html {
         font-size: 18px;
     }
 }
 
-/* Pour les écrans de 1535px et au-dessus */
 @media (min-width: 1535px) {
     html {
         font-size: 20px;
     }
 }
 
-/* small screen */
-@media (max-width: 1170px) {
+/* SMALL SCREEN CUSTOM */
+@media (min-width: 800px) and (max-width: 1170px) {
     .grid-container {
         margin: 0;
         width: 100%;
@@ -38,17 +36,48 @@ html {
     }
 
     #nav > .grid-container > nav {
-        grid-column: 10/12;
+        grid-column: 9/12;
     }
 
-    /* hero section */
     .alan {
         grid-column: 7/-1;
     }
 }
 
-/* mobile */
-@media (max-width: 768px) {
+/* TABLET */
+@media (min-width: 800px) and (max-width: 1024px) {
+    #project .title h2,
+    #about .title h2,
+    #sideProject .title h2,
+    #contact .title h2,
+    #project .work h3,
+    #project .work p,
+    #project .work ul {
+        grid-column: 5/12;
+    }
+
+    #about .content > p {
+        grid-column: 7/2;
+    }
+
+    #sideProject .spa {
+        grid-column: 3/7;
+    }
+
+    #sideProject .spb {
+        grid-column: 8/12;
+    }
+
+}
+
+@media (min-width: 800px) and (max-width: 973px) {
+    #sideProject .spc {
+        grid-column: 3/12;
+    }
+}
+
+/* MOBILE */
+@media (max-width: 800px) {
     .grid-container {
         grid-template-columns: repeat(10, 1fr);
         margin: 0;
@@ -58,4 +87,10 @@ html {
         margin: 0;
         width: 100%;
     }
+
+    /* le menu doit se mettre en mode mobile
+       tout le content est positioné en grid-column: 1/10
+       il faut personnalisé les gros titre et le heros
+    */
 }
+
