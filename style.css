@@ -317,6 +317,7 @@ a.hovered > span::before, #email.hovered::before {
 #about > .content > .pic {
     grid-column: 7/12;
     grid-row: 1/5; /* allow al the p to go beside the img */
+    display: grid; /* place the legend under the img */
 }
 
 #about > .content > .pic > img {
@@ -370,7 +371,7 @@ a.hovered > span::before, #email.hovered::before {
 }
 
 #sideProject .spc {
-    grid-column: 3/10;
+    grid-column: 3/11;
     margin-top: 5rem;
 }
 

@@ -1,3 +1,22 @@
+/* Par défaut pour les écrans de 1280px */
+html {
+    font-size: 16px;
+}
+
+/* Pour les écrans de 1440px */
+@media (min-width: 1440px) {
+    html {
+        font-size: 18px;
+    }
+}
+
+/* Pour les écrans de 1535px et au-dessus */
+@media (min-width: 1535px) {
+    html {
+        font-size: 20px;
+    }
+}
+
 /* small screen */
 @media (max-width: 1170px) {
     .grid-container {

@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         requestAnimationFrame(raf)
 
-        // lenis.scrollTo(0, {immediate: true, force:true}) // on reload the page is at the top
+        lenis.scrollTo(0, {immediate: true, force:true}) // on reload the page is at the top
 
         return lenis;
     }
