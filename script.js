@@ -275,6 +275,23 @@ document.addEventListener('DOMContentLoaded', function() {
             })
         })
 
+        /* animate the img */
+        const imgs = document.getElementsByClassName('animate-pic');
+        Array.from(imgs).forEach((el, i) => {
+            let tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: el,
+                    start: 'top 90%',
+                    scrub: false,
+                    toggleAction: 'play',
+                    markers: false
+                }
+            });
+            el.childNodes.forEach((e, i) => {
+                tl.to(e, {x: 0, stagger: 0.05, autoAlpha: 1, duration: 0.5, ease: 'expoScale(0.5,7,none)'});
+            })
+        })
+
         /* add all the secondary timeline to the main */
         tlmain
             .add(colEntrance,      'seqA')
