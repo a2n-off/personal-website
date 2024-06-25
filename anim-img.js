@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 value: 0
                             },
                             resolution: {
-                                value: new THREE.Vector4()
+                                value: new THREE.Vector4(1, 1, 1, 1)
                             },
                             uTexture: {
                                 value: imgTexture
@@ -124,6 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         fragmentShader
                     });
                     const randomGeometry = new THREE.PlaneGeometry(2 * imgAspect, 2);
+                    //const randomGeometry = new THREE.PlaneGeometry(1);
                     const randomMesh = new THREE.Mesh(randomGeometry, randomMaterial);
                     scene.add(randomMesh);
                 }
