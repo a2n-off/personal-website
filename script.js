@@ -22,11 +22,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     const lenis = loadLenis();
 
-    function loadGSAP() {
-        gsap.registerPlugin(ScrollTrigger,Draggable,TextPlugin);
-    }
-    loadGSAP();
-
     // create main div for the mouse effect
     const circle = document.createElement('div');
 
@@ -145,6 +140,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     tooltips();
 
+    function loadGSAP() {
+        gsap.registerPlugin(ScrollTrigger,Draggable,TextPlugin);
+    }
+    loadGSAP();
+
     function animation() {
         // block the scroll
         lenis.stop();
@@ -206,11 +206,11 @@ document.addEventListener('DOMContentLoaded', function() {
         /* fade all the elements */
         let loaderFading = gsap.timeline();
         loaderFading.to(loader, {autoAlpha: 0, duration: baseDuration, ease: 'expoScale(0.5,7,none)', onComplete: () => {
-            // reset all the main element
-            nav.style.zIndex = 2; /* no idea why I need this to have my blur working but since it work ... */
-            lenis.start();
-            loader.remove();
-        }})
+                // reset all the main element
+                nav.style.zIndex = 2; /* no idea why I need this to have my blur working but since it work ... */
+                lenis.start();
+                loader.remove();
+            }})
 
         /* animate the rest of the hero block */
         let navEntrance = gsap.timeline();
@@ -304,5 +304,4 @@ document.addEventListener('DOMContentLoaded', function() {
         ;
     }
     animation();
-
 });
