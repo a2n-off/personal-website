@@ -66,8 +66,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const settings = {
                     relaxation: 0.9,
-                    mouse: 0.2,
-                    strength: 0.5,
+                    mouse: 0.25,
+                    strength: 0.11,
                     size: 50
                 };
 
@@ -128,9 +128,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     scene.add(randomMesh);
                 }
 
+                /**
+                 * update the texture in fc of the mouse movement
+                 */
                 function updateDataTexture() {
                     let data = gridTexture.image.data;
-                    for (let i = 0; i < data.length; i += 3) {
+
+                    for (let i = 0; i < data.length; i += 4) {
                         data[i] *= settings.relaxation;
                         data[i + 1] *= settings.relaxation;
                     }
@@ -148,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                             if (distance < maxDistSq) {
 
-                                let index = 3 * (i + settings.size * j);
+                                let index = 4 * (i + settings.size * j);
 
                                 let power = maxDist / Math.sqrt(distance);
                                 power = clamp(power, 0, 10);
@@ -164,18 +168,27 @@ document.addEventListener('DOMContentLoaded', function () {
                     gridTexture.needsUpdate = true;
                 }
 
+                /**
+                 * render all the stuff
+                 */
                 function render() {
                     updateDataTexture();
                     renderer.render(scene, camera);
                     requestAnimationFrame(render);
                 }
 
+                /**
+                 * update the coordinate of the mouse for is position into the canvas
+                 * @param event
+                 */
                 function updateMousePosition(event) {
                     const rect = canvas.getBoundingClientRect();
-                    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-                    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+                    mouse.x = (event.clientX - rect.left) / imgWidth;
+                    mouse.y = (event.clientY - rect.top) / imgHeight;
+
                     mouse.vX = mouse.x - prevMouse.x;
                     mouse.vY = mouse.y - prevMouse.y;
+
                     prevMouse.x = mouse.x;
                     prevMouse.y = mouse.y;
                 }
@@ -184,12 +197,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     updateMousePosition(event);
                 });
 
+                /**
+                 * first add the object then render it
+                 */
                 addObjects();
                 render();
             });
         }
     }
 
-    // Appeler la fonction principale
     processImages();
 });
