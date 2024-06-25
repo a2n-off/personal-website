@@ -1,8 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Cibler toutes les balises <img>
     const images = document.querySelectorAll('img');
 
-    // Fonction asynchrone pour charger une image
     function loadImage(img) {
         return new Promise((resolve) => {
             if (img.complete) {
@@ -14,78 +12,180 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Fonction principale pour traiter chaque image
+    function clamp(number, min, max) {
+        return Math.max(min, Math.min(number, max));
+    }
+
     async function processImages() {
         for (const img of images) {
             await loadImage(img);
 
-            // Obtenir les dimensions de l'image
-            const width = img.width;
-            const height = img.height;
-            const src = img.src;
+            // get the img h & w and calculate the aspect
+            const imgWidth = img.width;
+            const imgHeight = img.height;
+            const imgAspect = imgWidth / imgHeight;
+            const imgSrc = img.src;
 
-            // Créer un élément <canvas> de la même taille
+            // create a canvas w/ the same size of the img
             const canvas = document.createElement('canvas');
-            canvas.width = width;
-            canvas.height = height;
+            canvas.width = imgWidth;
+            canvas.height = imgHeight;
 
-            // Remplacer l'image par le canvas
+            // replace the img by the canva
             img.parentNode.replaceChild(canvas, img);
 
-            // Initialiser le renderer de Three.js
+            // init the rendering of three.js
             const renderer = new THREE.WebGLRenderer({ canvas: canvas });
-            renderer.setSize(width, height);
+            renderer.setSize(imgWidth, imgHeight);
 
-            // Créer une scène
+            // init scene, camera and light
             const scene = new THREE.Scene();
-
-            // Créer une caméra orthographique
-            const aspect = width / height;
-            const camera = new THREE.OrthographicCamera(-aspect, aspect, 1, -1, 0.1, 10);
+            const camera = new THREE.OrthographicCamera(-imgAspect, imgAspect, 1, -1, 0.1, 10);
             camera.position.z = 1;
-
-            // Ajouter une lumière à la scène
             const light = new THREE.DirectionalLight(0xffffff, 1);
             light.position.set(0, 0, 1).normalize();
             scene.add(light);
 
-            // Charger la texture de l'image
+            // load the img texture
             const textureLoader = new THREE.TextureLoader();
-            textureLoader.load(src, function (texture) {
-                // Créer un matériau utilisant la texture
-                const material = new THREE.MeshBasicMaterial({ map: texture });
+            textureLoader.load(imgSrc, function (imgTexture) {
+                // create a material from the img
+                const imgMaterial = new THREE.MeshBasicMaterial({ map: imgTexture });
 
-                // Créer une géométrie de plan de la même taille que le canvas
-                const geometry = new THREE.PlaneGeometry(2 * aspect, 2);
+                // create a plane geometry of the same size has the canva
+                const geometry = new THREE.PlaneGeometry(2 * imgAspect, 2);
 
-                // Créer le mesh
-                const mesh = new THREE.Mesh(geometry, material);
+                // create mesh and add it to the scene
+                const mesh = new THREE.Mesh(geometry, imgMaterial);
                 scene.add(mesh);
 
-                // Créer une texture aléatoire en utilisant les dimensions de l'image
-                const size = width * height;
-                const data = new Uint8Array(4 * size);
-                for (let i = 0; i < size; i++) {
-                    const stride = i * 4;
-                    let r = Math.random() * 255;
-                    let g = Math.random() * 255;
+                // Variables for grid and mouse interaction
+                let gridTexture;
+                let mouse = { x: 0, y: 0, vX: 0, vY: 0 };
+                let prevMouse = { x: 0, y: 0 };
 
-                    data[stride] = r; // red
-                    data[stride + 1] = g; // green
-                    data[stride + 2] = 150; // blue, fixe pour une couleur visible
-                    data[stride + 3] = 255; // alpha
+                const settings = {
+                    relaxation: 0.9,
+                    mouse: 0.2,
+                    strength: 0.5,
+                    size: 50
+                };
+
+                /**
+                 * generate the grid texture (dataTexture) in function of the parameter
+                 */
+                function generateGrid() {
+                    const size = settings.size * settings.size;
+                    const data = new Float32Array(4 * size);
+
+                    for (let i = 0; i < size; i++) {
+                        const stride = i * 4;
+                        let r = Math.random() * 255 - 125;
+                        let r1 = Math.random() * 255 - 125;
+
+                        data[stride] = r; // red, and also X
+                        data[stride + 1] = r1; // green, and also Y
+                        data[stride + 2] = 0; // blue
+                    }
+
+                    gridTexture = new THREE.DataTexture(data, settings.size, settings.size, THREE.RGBAFormat, THREE.FloatType);
+                    gridTexture.needsUpdate = true;
                 }
-                const randomTexture = new THREE.DataTexture(data, width, height, THREE.RGBAFormat);
-                randomTexture.needsUpdate = true;
 
-                // Utiliser une nouvelle géométrie pour le randomMesh
-                const randomGeometry = new THREE.PlaneGeometry(2 * aspect, 2);
-                const randomMaterial = new THREE.MeshBasicMaterial({ map: randomTexture, transparent: true, opacity: 0.5 });
-                const randomMesh = new THREE.Mesh(randomGeometry, randomMaterial);
-                scene.add(randomMesh);
+                /**
+                 * generate the grid texture and add the texture to the scene
+                 */
+                function addObjects() {
+                    generateGrid();
+                    imgTexture.needsUpdate = true;
+                    const vertexShader = document.getElementById('vertexShader').textContent;
+                    const fragmentShader = document.getElementById('fragmentShader').textContent;
 
-                // Rendre la scène avec les deux textures
-                renderer.render(scene, camera);
+                    const randomMaterial = new THREE.ShaderMaterial({
+                        extensions: {
+                            derivatives: "#extension GL_OES_standard_derivatives : enable"
+                        },
+                        side: THREE.DoubleSide,
+                        uniforms: {
+                            time: {
+                                value: 0
+                            },
+                            resolution: {
+                                value: new THREE.Vector4()
+                            },
+                            uTexture: {
+                                value: imgTexture
+                            },
+                            uDataTexture: {
+                                value: gridTexture
+                            },
+                        },
+                        vertexShader,
+                        fragmentShader
+                    });
+                    const randomGeometry = new THREE.PlaneGeometry(2 * imgAspect, 2);
+                    const randomMesh = new THREE.Mesh(randomGeometry, randomMaterial);
+                    scene.add(randomMesh);
+                }
+
+                function updateDataTexture() {
+                    let data = gridTexture.image.data;
+                    for (let i = 0; i < data.length; i += 3) {
+                        data[i] *= settings.relaxation;
+                        data[i + 1] *= settings.relaxation;
+                    }
+
+                    let gridMouseX = settings.size * mouse.x;
+                    let gridMouseY = settings.size * (1 - mouse.y);
+                    let maxDist = settings.size * settings.mouse;
+                    let aspect = imgHeight / imgWidth;
+
+                    for (let i = 0; i < settings.size; i++) {
+                        for (let j = 0; j < settings.size; j++) {
+
+                            let distance = ((gridMouseX - i) ** 2) / aspect + (gridMouseY - j) ** 2;
+                            let maxDistSq = maxDist ** 2;
+
+                            if (distance < maxDistSq) {
+
+                                let index = 3 * (i + settings.size * j);
+
+                                let power = maxDist / Math.sqrt(distance);
+                                power = clamp(power, 0, 10);
+
+                                data[index] += settings.strength * 100 * mouse.vX * power;
+                                data[index + 1] -= settings.strength * 100 * mouse.vY * power;
+                            }
+                        }
+                    }
+
+                    mouse.vX *= 0.9;
+                    mouse.vY *= 0.9;
+                    gridTexture.needsUpdate = true;
+                }
+
+                function render() {
+                    updateDataTexture();
+                    renderer.render(scene, camera);
+                    requestAnimationFrame(render);
+                }
+
+                function updateMousePosition(event) {
+                    const rect = canvas.getBoundingClientRect();
+                    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+                    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+                    mouse.vX = mouse.x - prevMouse.x;
+                    mouse.vY = mouse.y - prevMouse.y;
+                    prevMouse.x = mouse.x;
+                    prevMouse.y = mouse.y;
+                }
+
+                canvas.addEventListener('mousemove', event => {
+                    updateMousePosition(event);
+                });
+
+                addObjects();
+                render();
             });
         }
     }
