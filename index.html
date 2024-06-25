@@ -121,8 +121,8 @@
   </div>
   <div class="grid-container content">
     <div class="pic">
-      <div class="animate-pic" id="canvasContainer">
-        <img src="pic.png" alt="self-portrait by Bouteiller Alan">
+      <div class="animate-pic">
+        <img src="pic-marged.png" height="400" width="367" alt="self-portrait by Bouteiller Alan">
       </div>
       <p class="animate-text-hc">A good mix between tech and product.</p>
     </div>
@@ -208,6 +208,17 @@
     </div>
   </div>
 </div>
+
+<div id="footer">
+  <div class="grid-container">
+    <div id="grid-footer">
+      <div><p>Linkedin, Behance, Github</p></div>
+      <div><p>Design & code by Bouteiller Alan</p></div>
+      <div><p>GPG # 6A2E CC8A 396F 8A94 3A10  9A1E 0F11 C2A6 BF79 111E</p></div>
+    </div>
+  </div>
+</div>
+
 <script id="vertexShader" type="x-shader/x-vertex">
   uniform float time;
   varying vec2 vUv;
@@ -219,7 +230,6 @@
     gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
   }
 </script>
-
 <script id="fragmentShader" type="x-shader/x-fragment">
   uniform float time;
   uniform float progress;
@@ -252,6 +262,5 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/TextPlugin.min.js"></script>
 
 <script src="./script.js"></script>
-<script src="./anim-img.js"></script>
 </body>
 </html>

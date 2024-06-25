@@ -10,7 +10,7 @@ body {
 body {
     background-color: var(--sec-color);
     color: var(--pri-color);
-    margin-bottom: 10rem; /* add some space at the end of the view */
+    margin-bottom: 2.5rem; /* add some space at the end of the view */
     overflow: hidden;
 }
 
@@ -180,6 +180,10 @@ a.hovered > span::before, #email.hovered::before {
 
 #project, #about, #sideProject, #contact {
     margin-top: 20rem;
+}
+
+#footer {
+    margin-top: 10rem;
 }
 
 /* nav style */
@@ -435,4 +439,55 @@ a.hovered > span::before, #email.hovered::before {
     height: 100%;
     background-image: url('broken-noise.png');
     opacity: 0.2;
+}
+
+#footer {
+    height: 80px;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+#footer > .grid-container {
+    height: 100%;
+}
+
+#grid-footer {
+    grid-column: 1/-1;
+    width: 100%;
+    display: flex;
+    transform: translateY(100%);
+}
+
+#grid-footer > div {
+    width: calc(100%/3);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px;
+}
+
+#grid-footer > div p > span {
+    transform: translateY(80px);
+}
+
+#grid-footer > div:nth-child(1) {
+    border-right:  2px solid var(--pri-color);
+    border-left: 2px solid var(--pri-color);
+    border-top:  2px solid var(--pri-color);
+    border-bottom:  2px solid var(--pri-color);
+    border-bottom-left-radius: 8px;
+}
+
+#grid-footer > div:nth-child(2) {
+    border-top:  2px solid var(--pri-color);
+    border-bottom:  2px solid var(--pri-color);
+}
+
+#grid-footer > div:nth-child(3) {
+    border-right: 2px solid var(--pri-color);
+    border-left:  2px solid var(--pri-color);
+    border-top:  2px solid var(--pri-color);
+    border-bottom:  2px solid var(--pri-color);
+    border-bottom-right-radius: 8px;
 }
