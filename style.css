@@ -467,7 +467,7 @@ a.hovered > span::before, #email.hovered::before {
     padding: 2px;
 }
 
-#grid-footer > div p > span {
+.text-footer {
     transform: translateY(80px);
 }
 
