@@ -644,100 +644,120 @@ window.onload = () => {
         }
     })
 
-    function easter () {
-        document.querySelectorAll('.easterEgg').forEach(element => {
-            element.addEventListener('click', event => {
-                startEmojiFountain(event.currentTarget);
-            });
-        });
 
-        function startEmojiFountain(target) {
-            const w = target.getBoundingClientRect().width;
-            const emoji = target.getAttribute('emoji');
-            const rect = target.getBoundingClientRect();
-            console.log(w, emoji, rect)
-
-            const containerHeight = rect.top;
-
-            // Create and style the container dynamically
-            const container = document.createElement('div');
-            container.id = 'emoji-container';
-            container.style.width = '100vw';
-            container.style.height = `${containerHeight}px`;
-            container.style.top = `${rect.top - containerHeight}px`;
-            container.style.left = '0px';
-            document.body.appendChild(container);
-
-            // Three.js setup
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / containerHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ alpha: true });
-            renderer.setSize(window.innerWidth, containerHeight);
-            container.appendChild(renderer.domElement);
-
-            const emojis = [];
-            const emojiTexture = createEmojiTexture(emoji);
-            const emojiGeometry = new THREE.PlaneGeometry(1, 1);
-            const emojiMaterial = new THREE.MeshBasicMaterial({ map: emojiTexture, transparent: true });
-
-            const initialX = rect.left + rect.width / 2 - window.innerWidth / 2;
-            const initialY = containerHeight / 2;
-
-            camera.position.z = 10;
-
-            console.log(initialY, initialX)
-
-            for (let i = 0; i < 100; i++) {
-                const emojiMesh = new THREE.Mesh(emojiGeometry, emojiMaterial);
-                emojiMesh.position.set(100, -100, 0);
-                scene.add(emojiMesh);
-                emojis.push(emojiMesh);
+        class Fountain {
+            constructor() {
+                this.limit = 35;
+                this.particles = [];
+                this.autoAddParticle = false;
+                this.height = document.documentElement.clientHeight;
+                this.sizes = [15, 20, 25, 35, 45];
+                this.variants = [
+                    '🎤', '🎉', '💩', '🔥', '👏', '🤘', '🦄', '🌈',
+                    '🍺', '🎊', '🐼', '🐙', '🐋', '🌶', '🍞', '🍕'
+                ];
+                this.addHandlers();
+                this.loop();
             }
 
-            function animate() {
-                requestAnimationFrame(animate);
-                emojis.forEach(emoji => {
-                    emoji.position.y += emoji.userData.velocityY;
-                    emoji.position.x += emoji.userData.velocityX;
-                    emoji.userData.velocityY -= 0.01; // gravity effect
+            loop() {
+                if (this.autoAddParticle && this.particles.length < this.limit) {
+                    this.createParticle();
+                }
 
-                    // Reset position if emoji falls below the starting point
-                    if (emoji.position.y < 0) {
-                        emoji.position.set(0, 0, 0);
-                        emoji.userData.velocityX = Math.random() * 0.2 - 0.1;
-                        emoji.userData.velocityY = Math.random() * 0.5 + 0.2;
-                    }
+                this.updateParticles();
+
+                requestAnimationFrame(this.loop.bind(this));
+            }
+
+            addHandlers() {
+                const isTouchInteraction = 'ontouchstart' in window || navigator.msMaxTouchPoints;
+
+                const tap = isTouchInteraction ? 'touchstart' : 'mousedown';
+                const tapEnd = isTouchInteraction ? 'touchend' : 'mouseup';
+                const move = isTouchInteraction ? 'touchmove' : 'mousemove';
+
+                document.addEventListener(move, (e) => {
+                    e.preventDefault();
+                    this.mouseX = e.clientX || e.touches[0].clientX;
+                    this.mouseY = e.clientY || e.touches[0].clientY;
+                }, {passive: false});
+
+                document.addEventListener(tap, (e) => {
+                    this.mouseX = e.clientX || e.touches[0].clientX;
+                    this.mouseY = e.clientY || e.touches[0].clientY;
+                    this.autoAddParticle = true;
                 });
-                renderer.render(scene, camera);
+
+                document.addEventListener(tapEnd, () => {
+                    this.autoAddParticle = false;
+                });
+
+                document.addEventListener('mouseleave', () => {
+                    this.autoAddParticle = false;
+                });
             }
 
-            emojis.forEach(emoji => {
-                emoji.userData.velocityX = Math.random() * 0.2 - 0.1;
-                emoji.userData.velocityY = Math.random() * 0.5 + 0.2;
-            });
+            createParticle() {
+                const size = this.sizes[Math.floor(Math.random() * this.sizes.length)];
+                const speedHorz = Math.random() * 10;
+                const speedUp = Math.random() * 25;
+                const spinVal = Math.random() * 360;
+                const spinSpeed = ((Math.random() * 35)) * (Math.random() <= .5 ? -1 : 1);
+                const top = (this.mouseY - size / 2);
+                const left = (this.mouseX - size / 2);
+                const direction = Math.random() <= .5 ? -1 : 1;
 
-            animate();
+                const particle = document.createElement('span');
+                particle.innerHTML = this.variants[Math.floor(Math.random() * this.variants.length)];
+                particle.classList.add('particle');
 
-            setTimeout(() => {
-                container.remove();
-            }, 2000);
+                particle.setAttribute("style", `
+      font-size: ${size}px;
+      top: ${top}px;
+      left: ${left}px;
+      transform: rotate(${spinVal}deg);
+    `);
+
+                document.body.appendChild(particle);
+
+                this.particles.push({
+                    element: particle,
+                    size,
+                    speedHorz,
+                    speedUp,
+                    spinVal,
+                    spinSpeed,
+                    top,
+                    left,
+                    direction,
+                });
+            }
+
+            updateParticles() {
+                this.particles.forEach((p) => {
+                    p.left = p.left - (p.speedHorz * p.direction);
+                    p.top = p.top - p.speedUp;
+                    p.speedUp = Math.min(p.size, p.speedUp - 1);
+                    p.spinVal = p.spinVal + p.spinSpeed;
+
+                    if (p.top >= this.height + p.size) {
+                        this.particles = this.particles.filter((o) => o !== p);
+                        p.element.remove();
+                    }
+
+                    p.element.setAttribute("style", `
+        top: ${p.top}px;
+        left: ${p.left}px;
+        font-size: ${p.size}px;
+        transform:rotate(${p.spinVal}deg);
+      `);
+                });
+            }
+
         }
 
-        function createEmojiTexture(emoji) {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.width = 64;
-            canvas.height = 64;
-            context.font = '48px serif';
-            context.textAlign = 'center';
-            context.textBaseline = 'middle';
-            context.fillText(emoji, 32, 32);
+        new Fountain();
 
-            const texture = new THREE.Texture(canvas);
-            texture.needsUpdate = true;
-            return texture;
-        }
 
-    }
-    easter()
 }
