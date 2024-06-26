@@ -239,7 +239,13 @@ window.onload = () => {
 
         let introEntrance = gsap.timeline();
         const introWords = intro.textContent.split(' ');
-        intro.innerHTML = introWords.map(word => `<span class='letter'>${word}</span>`).join(' ');
+        intro.innerHTML = introWords.map((word) => {
+            if (word === 'Product') {
+                return `<span class='letter easterEgg' emoji='🚀'>${word}</span>`
+            } else {
+                return `<span class='letter'>${word}</span>`
+            }
+        }).join(' ');
         intro.childNodes.forEach((e, i) => {
             if (i === 0) {
                 introEntrance.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'});
@@ -637,4 +643,101 @@ window.onload = () => {
             winIsLargerThan800 = window.innerWidth > 800;
         }
     })
+
+    function easter () {
+        document.querySelectorAll('.easterEgg').forEach(element => {
+            element.addEventListener('click', event => {
+                startEmojiFountain(event.currentTarget);
+            });
+        });
+
+        function startEmojiFountain(target) {
+            const w = target.getBoundingClientRect().width;
+            const emoji = target.getAttribute('emoji');
+            const rect = target.getBoundingClientRect();
+            console.log(w, emoji, rect)
+
+            const containerHeight = rect.top;
+
+            // Create and style the container dynamically
+            const container = document.createElement('div');
+            container.id = 'emoji-container';
+            container.style.width = '100vw';
+            container.style.height = `${containerHeight}px`;
+            container.style.top = `${rect.top - containerHeight}px`;
+            container.style.left = '0px';
+            document.body.appendChild(container);
+
+            // Three.js setup
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / containerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true });
+            renderer.setSize(window.innerWidth, containerHeight);
+            container.appendChild(renderer.domElement);
+
+            const emojis = [];
+            const emojiTexture = createEmojiTexture(emoji);
+            const emojiGeometry = new THREE.PlaneGeometry(1, 1);
+            const emojiMaterial = new THREE.MeshBasicMaterial({ map: emojiTexture, transparent: true });
+
+            const initialX = rect.left + rect.width / 2 - window.innerWidth / 2;
+            const initialY = containerHeight / 2;
+
+            camera.position.z = 10;
+
+            console.log(initialY, initialX)
+
+            for (let i = 0; i < 100; i++) {
+                const emojiMesh = new THREE.Mesh(emojiGeometry, emojiMaterial);
+                emojiMesh.position.set(100, -100, 0);
+                scene.add(emojiMesh);
+                emojis.push(emojiMesh);
+            }
+
+            function animate() {
+                requestAnimationFrame(animate);
+                emojis.forEach(emoji => {
+                    emoji.position.y += emoji.userData.velocityY;
+                    emoji.position.x += emoji.userData.velocityX;
+                    emoji.userData.velocityY -= 0.01; // gravity effect
+
+                    // Reset position if emoji falls below the starting point
+                    if (emoji.position.y < 0) {
+                        emoji.position.set(0, 0, 0);
+                        emoji.userData.velocityX = Math.random() * 0.2 - 0.1;
+                        emoji.userData.velocityY = Math.random() * 0.5 + 0.2;
+                    }
+                });
+                renderer.render(scene, camera);
+            }
+
+            emojis.forEach(emoji => {
+                emoji.userData.velocityX = Math.random() * 0.2 - 0.1;
+                emoji.userData.velocityY = Math.random() * 0.5 + 0.2;
+            });
+
+            animate();
+
+            setTimeout(() => {
+                container.remove();
+            }, 2000);
+        }
+
+        function createEmojiTexture(emoji) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = 64;
+            canvas.height = 64;
+            context.font = '48px serif';
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+            context.fillText(emoji, 32, 32);
+
+            const texture = new THREE.Texture(canvas);
+            texture.needsUpdate = true;
+            return texture;
+        }
+
+    }
+    easter()
 }

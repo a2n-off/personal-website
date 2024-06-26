@@ -559,3 +559,9 @@ a.hovered > span::before, #email.hovered::before {
 #nav-s a {
     font-size: inherit;
 }
+
+#emoji-container {
+    position: absolute;
+    width: 100vw;
+    pointer-events: none;
+}
