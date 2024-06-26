@@ -60,8 +60,26 @@
   </div>
 </div>
 
+<div id="nav-s">
+  <div class="nav-grid">
+    <h6 id="cross">close</h6>
+    <p id="version-s"><span>2024:v3</span></p>
+    <nav>
+      <h2>
+        <a class="link-s" href="#project"><span>Work,</span></a>
+        <a class="link-s" href="#about"><span>About,</span></a>
+        <a class="link-s" href="https://a2nb.medium.com/" target="_parent" rel="noreferrer"><span>Blog</span></a>
+      </h2>
+    </nav>
+  </div>
+</div>
+
 <div id="hero">
-  <div class="shadowNav"></div>
+  <div class="shadowNav">
+    <div class="grid-container">
+      <h6 id="menu" class="only-s">menu</h6>
+    </div>
+  </div>
   <div class="grid-container" id="title">
     <h2 id="name" class="alan urbanist animate-text">Alan</h2>
     <h2 id="lastname" class="bouteiller urbanist">Bouteiller</h2>
@@ -83,7 +101,7 @@
 <div id="project">
   <div class="grid-container title">
     <p><span class="animate-text-hc">// 01</span></p>
-    <h2><span class="animate-title-hc">Featured works</span></h2>
+    <h2><span class="animate-title-hc fix-s">Featured works</span></h2>
   </div>
   <div class="grid-container work">
     <h3><span class="animate-text-hc">#1 Funepro </span><span class="secondary animate-text-hc">[SME, funerary art, turnover 12M€]</span></h3>
@@ -122,10 +140,13 @@
   <div class="grid-container content">
     <div class="pic">
       <div class="animate-pic">
-        <img src="pic-marged.png" height="400" width="367" alt="self-portrait by Bouteiller Alan">
+        <span>
+          <img src="pic-marged.png" alt="self-portrait by Bouteiller Alan">
+        </span>
       </div>
-      <p class="animate-text-hc">A good mix between tech and product.</p>
+      <p id="legend-h" class="animate-text-hc">A good mix between tech and product.</p>
     </div>
+    <p id="legend-s" class="animate-text-hc">A good mix between tech and product.</p>
     <p class="animate-text-hc">
       I'm a passionate Product Manager with a solid background in delivery.
     </p>
@@ -147,7 +168,7 @@
 <div id="sideProject">
   <div class="grid-container title">
     <p><span class="animate-text-hc">// 03</span></p>
-    <h2><span class="animate-title-hc">Side projects</span></h2>
+    <h2><span class="animate-title-hc fix-s">Side projects</span></h2>
   </div>
 
   <div class="grid-container">
@@ -182,7 +203,7 @@
     </div>
 
     <div class="spc sp">
-      <h5 class="animate-title-hc"># Other project</h5>
+      <h5 class="animate-title-hc fix-s"># Other project</h5>
       <ul class="link-list">
         <li><a href="https://addons.mozilla.org/fr/firefox/addon/improveproton/" target="_parent" rel="noreferrer"><span class="animate-text-hc">Quality life improvement plugin for Protonmail website.</span></a></li>
         <li><a href="https://github.com/bouteillerAlan/dracut-numlock" target="_parent" rel="noreferrer"><span class="animate-text-hc">Dracut Numlock - Maintaining the package on the AUR repository.</span></a></li>
@@ -196,10 +217,11 @@
 <div id="contact">
   <div class="grid-container title">
     <p><span class="animate-text-hc">// 04</span></p>
-    <h2><span class="animate-title-hc">Let's talk</span></h2>
+    <h2><span class="animate-title-hc fix-s">Let's talk</span></h2>
   </div>
   <div class="grid-container">
     <div id="email-container">
+      <p id="email-action-mobile" class="only-s">Hold to copy!</p>
       <h3 id="email" toCopy="bouteiller.alan@proton.me">
         <span class="animate-text-hc">bouteiller.alan</span>
         <br/>
@@ -220,7 +242,7 @@
         </p>
       </div>
       <div><p class="text-footer">Design & code by Bouteiller Alan</p></div>
-      <div><p class="text-footer">GPG # 6A2E CC8A 396F 8A94 3A10  9A1E 0F11 C2A6 BF79 111E</p></div>
+      <div><p class="text-footer">GPG # 6A2E CC8A 396F 8A94 3A10 9A1E 0F11 C2A6 BF79 111E</p></div>
     </div>
   </div>
 </div>
@@ -266,7 +288,6 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/Draggable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/TextPlugin.min.js"></script>
-
 <script src="./script.min.js"></script>
 </body>
 </html>

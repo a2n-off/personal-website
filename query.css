@@ -78,19 +78,86 @@ html {
 
 /* MOBILE */
 @media (max-width: 800px) {
+    .only-s {
+        display: block;
+    }
+
+    html {
+        font-size: 14px;
+    }
+
     .grid-container {
         grid-template-columns: repeat(10, 1fr);
         margin: 0;
         width: 100%;
     }
+
     .container {
         margin: 0;
         width: 100%;
     }
 
-    /* le menu doit se mettre en mode mobile
-       tout le content est positioné en grid-column: 1/10
-       il faut personnalisé les gros titre et le heros
-    */
+    #nav, .animate-pic > canvas {
+        display: none;
+    }
+
+    #name {
+        font-size: 5rem;
+        grid-column: 5/-1;
+    }
+
+    #lastname {
+        font-size: 5rem;
+        grid-column: 2/-1;
+    }
+
+    #email {
+        font-size: 2rem;
+    }
+
+    #footer {
+        height: min-content;
+    }
+
+    #project .title h2,
+    #about .title h2,
+    #sideProject .title h2,
+    #contact .title h2,
+    #project .work h3,
+    #project .work p,
+    #project .work ul,
+    #about .content > p,
+    #sideProject .spa,
+    #sideProject .spb,
+    #sideProject .spc,
+    .title > p,
+    #email-container
+    {
+        grid-column: 2/10 !important;
+    }
+
+    #about >.content > .pic {
+        grid-column: 1/-1 !important;
+    }
+
+    .animate-pic, img {
+        width: 100%;
+    }
+
+    #legend-s {
+        display: block;
+        grid-column: 2/10;
+    }
+
+    #legend-h {
+        display: none;
+    }
+
+    #menu {
+        grid-column: 8/10;
+        width: auto;
+        text-align: right;
+        cursor: pointer;
+    }
 }
 

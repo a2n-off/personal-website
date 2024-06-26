@@ -5,8 +5,15 @@
 
 .animate-pic {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+    display: inline-block;
     height: fit-content;
     width: fit-content;
+}
+
+.animate-pic > span {
+    transform: translateY(100%);
+    display: inline-block;
+    visibility: hidden;
 }
 
 h2 span.animate-title-hc span.animated-letter {
