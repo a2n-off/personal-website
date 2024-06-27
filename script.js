@@ -204,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         /* animate  the text */
         let nameEntrance = gsap.timeline();
-        name.childNodes.forEach((e, i) => {
+        Array.from(name.children).forEach((e, i) => {
             if (i === 0) {
                 nameEntrance.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'});
             } else {
@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
 
         let lastnameEntrance = gsap.timeline();
-        lastname.childNodes.forEach((e, i) => {
+        Array.from(lastname.children).forEach((e, i) => {
             if (i === 0) {
                 lastnameEntrance.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'});
             } else {
@@ -238,28 +238,41 @@ document.addEventListener('DOMContentLoaded', () => {
         bottomEntrance.to(bottom, {autoAlpha: 1, y: 0, stagger: 0.05, duration: baseDuration, ease: 'expoScale(0.5,7,none)'});
 
         let introEntrance = gsap.timeline();
+        let introUndEntrance = gsap.timeline();
         const introWords = intro.textContent.split(' ');
         intro.innerHTML = introWords.map((word) => {
-            if (word === 'Product' || word === 'Manager,') {
+            if (word === 'Product') {
+                return `<span class='letter underlined easterEgg pm' emoji='🚀'>${word}</span>`
+            } else if (word === 'Manager,') {
                 return `<span class='letter easterEgg' emoji='🚀'>${word}</span>`
-            } else if (word === 'dev') {
-                return `<span class='letter easterEgg' emoji='🧑‍💻'>${word}</span>`
+            } else if (word === 'dev.') {
+                return `<span class='letter underlined easterEgg dev' emoji='🧑‍💻'>${word}</span>`
             } else if (word === 'innovation,') {
-                return `<span class='letter easterEgg' emoji='💥'>${word}</span>`
+                return `<span class='letter underlined easterEgg inno' emoji='💥'>${word}</span>`
             } else if (word === 'tech,') {
-                return `<span class='letter easterEgg' emoji='🧑‍🔧'>${word}</span>`
-            } else if (word === 'design.') {
-                return `<span class='letter easterEgg' emoji='🎨'>${word}</span>`
+                return `<span class='letter underlined easterEgg tech' emoji='🧑‍🔧'>${word}</span>`
+            } else if (word === 'design') {
+                return `<span class='letter underlined easterEgg design' emoji='🎨'>${word}</span>`
             } else {
                 return `<span class='letter'>${word}</span>`
             }
         }).join(' ');
-        intro.childNodes.forEach((e, i) => {
+        Array.from(intro.children).forEach((e, i) => {
             if (i === 0) {
                 introEntrance.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'});
             } else {
                 introEntrance.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'}, `<${0.03}`);
             }
+            if (e.classList.contains('pm')) {
+                introUndEntrance.to(e, {'--pm-dur': '200%', stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'});
+            } else if (e.classList.contains('dev')) {
+                introUndEntrance.to(e, {'--dev-dur': '80%', stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'});
+            } else if (e.classList.contains('underlined')) {
+                introUndEntrance.to(e, {'--und-dur': '95%', stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'});
+            }
+
+
+
         })
 
         /* get all the other text to animate */
@@ -277,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     markers: false
                 }
             });
-            el.childNodes.forEach((e, i) => {
+            Array.from(el.children).forEach((e, i) => {
                 if (i === 0) {
                     tl.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: baseDuration, ease: 'expoScale(0.5,7,none)'});
                 } else {
@@ -298,7 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     markers: false
                 }
             });
-            el.childNodes.forEach((e, i) => {
+            Array.from(el.children).forEach((e, i) => {
                 if (i === 0) {
                     tl.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: baseDuration, ease: 'expoScale(0.5,7,none)'});
                 } else {
@@ -571,6 +584,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .add(navEntrance,      'seqC')
             .add(bottomEntrance,   'seqC')
             .add(introEntrance,    'seqC')
+            .add(introUndEntrance, 'seqD')
         ;
     }
 

@@ -461,7 +461,7 @@ a.hovered > span::before, #email.hovered::before {
 
 #footer {
     height: 80px;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 110%, 0% 110%);
 }
 
 #footer > .grid-container {
@@ -477,7 +477,7 @@ a.hovered > span::before, #email.hovered::before {
 
 #grid-footer > div {
     width: calc(100%/3);
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 110%, 0% 110%);
     text-align: center;
     display: flex;
     justify-content: center;
@@ -577,4 +577,49 @@ a.hovered > span::before, #email.hovered::before {
     position: absolute;
     width: 100dvw;
     pointer-events: none;
+}
+
+.underlined.pm {
+    --pm-dur: '0%';
+}
+.underlined.pm::before {
+    content: "";
+    position: absolute;
+    bottom: -0.25rem;
+    width: var(--pm-dur);
+    height: 14px;
+    transform: skew(-12deg);
+    background: rgba(0, 0, 0, 0.15);
+    z-index: -1;
+    transition: width 0.03s;
+}
+
+.underlined.dev {
+    --dev-dur: '0%';
+}
+.underlined.dev::before {
+    content: "";
+    position: absolute;
+    bottom: -0.25rem;
+    width: var(--dev-dur);
+    height: 14px;
+    transform: skew(-12deg);
+    background: rgba(0, 0, 0, 0.15);
+    z-index: -1;
+    transition: width 0.03s;
+}
+
+.underlined {
+    --und-dur: '0%';
+}
+.underlined::before {
+    content: "";
+    position: absolute;
+    bottom: -0.25rem;
+    width: var(--und-dur);
+    height: 14px;
+    transform: skew(-12deg);
+    background: rgba(0, 0, 0, 0.15);
+    z-index: -1;
+    transition: width 0.03s;
 }
