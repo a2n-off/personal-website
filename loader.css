@@ -51,8 +51,8 @@ h5 span.animate-text-hc span.animated-word {
 }
 
 #loader {
-    height: 100vh;
-    width: 100vw;
+    height: 100dvh;
+    width: 100dvw;
     background-color: var(--sec-color);
     position: absolute;
     bottom: 0;
