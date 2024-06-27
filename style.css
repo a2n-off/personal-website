@@ -1,4 +1,13 @@
 body {
+    min-height: 100dvh;
+    min-height: -webkit-fill-available;
+}
+
+html {
+    height: -webkit-fill-available;
+}
+
+body {
     --pri-color: #000000; /* text */
     --sec-color: #E1DFDD; /* background */
     --ter-color: #787878; /* secondary text */
