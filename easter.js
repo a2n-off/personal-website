@@ -17,12 +17,11 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     }
 
-    function drawRedSquare(x, y) {
-        console.log(x, y);
+    function drawHtmlSquare(x, y, color = 'red', size = 10) {
         const square = document.createElement('div');
-        square.style.width = '10px';
-        square.style.height = '10px';
-        square.style.backgroundColor = 'red';
+        square.style.width = `${size}px`;
+        square.style.height = `${size}px`;
+        square.style.backgroundColor = color;
         square.style.position = 'absolute';
         square.style.left = `${x}px`;
         square.style.top = `${y}px`;
@@ -30,15 +29,44 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.appendChild(square);
     }
 
-    function convertToCenterCoords(grid, x, y) {
-        const windowWidth = grid.innerWidth;
-        const windowHeight = grid.innerHeight;
-        const centerX = x - windowWidth / 2;
-        const centerY = y - windowHeight / 2;
-        return {
-            x: centerX,
-            y: centerY
-        };
+    function drawThreeJsSquare(scene, x, y, z = 0, color = 'red') {
+        const geometry = new THREE.PlaneGeometry(1, 1);
+        const material = new THREE.MeshBasicMaterial({ color: color, side: THREE.DoubleSide });
+        const square = new THREE.Mesh(geometry, material);
+        square.position.set(x, y, z);
+        scene.add(square);
+    }
+
+    function convertWorldToScreenPoint(xWorld, yWorld, canvasWidth, canvasHeight, projection) {
+        // Matrice 3x3 de projection
+        const m00 = projection[0], m01 = projection[1], m02 = projection[2];
+        const m10 = projection[3], m11 = projection[4], m12 = projection[5];
+        const m20 = projection[6], m21 = projection[7], m22 = projection[8];
+
+        // Transformation du point du monde aux coordonnées homogènes de l'espace écran (clip space)
+        const clipX = m00 * xWorld + m01 * yWorld + m02;
+        const clipY = m10 * xWorld + m11 * yWorld + m12;
+        const clipW = m20 * xWorld + m21 * yWorld + m22;
+
+        // Normalisation des coordonnées homogènes
+        const ndcX = clipX / clipW;
+        const ndcY = clipY / clipW;
+
+        // Conversion des coordonnées NDC (Normalized Device Coordinates) aux coordonnées d'écran
+        const screenX = (1.0 + ndcX) * canvasWidth / 2.0;
+        const screenY = (1.0 - ndcY) * canvasHeight / 2.0;
+
+        return [Math.round(screenX), Math.round(screenY)];
+    }
+
+    function getProjection(canvasWidth, canvasHeight) {
+        // Créer une matrice 3x3 pour la projection
+        const projection = [
+            2 / canvasWidth, 0, 0,
+            0, -2 / canvasHeight, 0,
+            -1, 1, 1
+        ];
+        return projection;
     }
 
     document.querySelectorAll(".easterEgg").forEach((element) => {
@@ -47,16 +75,25 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    function createEmojiTexture(emoji) {
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        canvas.width = 64;
+        canvas.height = 64;
+        context.font = "48px serif";
+        context.textAlign = "center";
+        context.textBaseline = "middle";
+        context.fillText(emoji, canvas.width / 2, canvas.height / 2);
+        const texture = new THREE.Texture(canvas);
+        texture.needsUpdate = true;
+        return texture;
+    }
+
     function startEmojiFountain(event) {
         const emoji = event.currentTarget.getAttribute("emoji");
-        const elem = getElementDimensions(event);
-        const pointer = new THREE.Vector2();
 
-        drawRedSquare(elem.x, elem.y)
-
-        // Create and style the container dynamically
         const container = document.createElement("div");
-        container.id = "emoji-container";
+        container.classList.add("emoji-container");
         container.style.position = "fixed";
         container.style.width = "100vw";
         container.style.height = "100vh";
@@ -65,39 +102,52 @@ document.addEventListener("DOMContentLoaded", () => {
         container.style.zIndex = "9999";
         document.body.appendChild(container);
 
-        // Three.js setup
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
-        camera.position.z = 25;
+        const camera = new THREE.OrthographicCamera(
+            -window.innerWidth / 2,
+            window.innerWidth / 2,
+            window.innerHeight / 2,
+            -window.innerHeight / 2,
+            0.1, 1000
+        );
+        camera.position.z = 1;
+        camera.lookAt(new THREE.Vector3(0,0,0));
+
+        const elem = getElementDimensions(event);
+        const pixelX = event.offsetX + elem.x;
+        const pixelY = event.offsetY + elem.y;
+
+        // debug
+        console.log('real coord', pixelX, pixelY);
+        drawHtmlSquare(pixelX, pixelY);
+
         const renderer = new THREE.WebGLRenderer({ alpha: true });
-        const raycaster = new THREE.Raycaster();
-        raycaster.params.Line.threshold = 3;
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
         container.appendChild(renderer.domElement);
+
         window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize( window.innerWidth, window.innerHeight );
+            renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
         const emojis = [];
         const emojiTexture = createEmojiTexture(emoji);
-        const emojiGeometry = new THREE.PlaneGeometry(1, 1);
+        const emojiGeometry = new THREE.PlaneGeometry(40, 40);
         const emojiMaterial = new THREE.MeshBasicMaterial({
             map: emojiTexture,
             transparent: true,
         });
 
-        // Calculate the initial position
-        //const initialX = event.offsetX;
-        //const initialY = -event.offsetY;
-        const initialX = ( event.offsetX / window.innerWidth ) * 2 - 1;
-        const initialY = - ( event.offsetY / window.innerHeight ) * 2 + 1;
+        const vec = new THREE.Vector3(pixelX, pixelY, -1);
+        const proj = new THREE.Vector3(pixelX, pixelY, -1).project(camera);
+        const unproj = new THREE.Vector3(pixelX, pixelY, -1).unproject(camera);
+        console.log('vec', vec)
+        console.log('proj', proj)
+        console.log('unproj', unproj)
 
         for (let i = 0; i < 50; i++) {
             const emojiMesh = new THREE.Mesh(emojiGeometry, emojiMaterial);
-            emojiMesh.position.set(initialX / 50, initialY / 50, 0);
+            emojiMesh.position.set(1,1,1);
             emojiMesh.userData.velocityX = Math.random() * 0.4 - 0.2;
             emojiMesh.userData.velocityY = Math.random() * 0.8 + 0.4;
             scene.add(emojiMesh);
@@ -114,14 +164,12 @@ document.addEventListener("DOMContentLoaded", () => {
             emojis.forEach((emoji) => {
                 // emoji.position.y += emoji.userData.velocityY;
                 // emoji.position.x += emoji.userData.velocityX;
-                // emoji.userData.velocityY -= 0.01; // gravity effect
+                // emoji.userData.velocityY -= 0.1; // gravity effect
 
                 if (emoji.position.y > -window.innerHeight / 50) {
                     stillAnimating = true;
                 }
             });
-
-            raycaster.setFromCamera( pointer, camera );
 
             renderer.render(scene, camera);
 
@@ -137,19 +185,5 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         animate();
-    }
-
-    function createEmojiTexture(emoji) {
-        const canvas = document.createElement("canvas");
-        const context = canvas.getContext("2d");
-        canvas.width = 64;
-        canvas.height = 64;
-        context.font = "48px serif";
-        context.textAlign = "center";
-        context.textBaseline = "middle";
-        context.fillText(emoji, 32, 32);
-        const texture = new THREE.Texture(canvas);
-        texture.needsUpdate = true;
-        return texture;
     }
 });

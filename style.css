@@ -563,13 +563,8 @@ a.hovered > span::before, #email.hovered::before {
 
 /* TODO */
 
-#emoji-container {
+.emoji-container {
     position: absolute;
     width: 100vw;
     pointer-events: none;
-}
-
-.particle {
-    position: absolute;
-    will-change: transform;
 }
