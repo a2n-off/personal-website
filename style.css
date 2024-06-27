@@ -169,12 +169,12 @@ a.hovered > span::before, #email.hovered::before {
 
 #bck > .grid-item {
     border: 1px dashed var(--grid-color);
-    min-height: 100dvh;
+    min-height: 100svh;
 }
 
 /* section */
 #hero {
-    min-height: calc(100dvh - 30px); /* 30 = pt + pb */
+    min-height: calc(100svh - 30px); /* 30 = pt + pb */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -507,7 +507,7 @@ a.hovered > span::before, #email.hovered::before {
     left: 0;
     z-index: 2;
     width: 100dvw;
-    height: 100dvh;
+    height: 100svh;
     background-color: var(--pri-color);
     color: var(--sec-color);
     pointer-events: all;
@@ -517,7 +517,7 @@ a.hovered > span::before, #email.hovered::before {
 
 #nav-s div.nav-grid {
     display: grid;
-    height: calc(100dvh);
+    height: calc(100svh);
     grid-template-columns: repeat(10, 1fr);
     gap: 20px;
     grid-template-rows: repeat(5, 1fr);
