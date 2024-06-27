@@ -7,7 +7,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const speedDuration = 0.3;
 
     function loadLenis() {
-        const lenis = new Lenis();
+        const lenis = new Lenis({
+            duration: 1.2, // Customize the duration of the scroll animation
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Easing function
+            direction: 'vertical', // Scroll direction
+            gestureDirection: 'vertical', // Gesture direction
+            smooth: true, // Enable smooth scroll
+            touchSmooth: false
+        });
 
         function raf(time) {
             lenis.raf(time)
