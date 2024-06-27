@@ -37,38 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
         scene.add(square);
     }
 
-    function convertWorldToScreenPoint(xWorld, yWorld, canvasWidth, canvasHeight, projection) {
-        // Matrice 3x3 de projection
-        const m00 = projection[0], m01 = projection[1], m02 = projection[2];
-        const m10 = projection[3], m11 = projection[4], m12 = projection[5];
-        const m20 = projection[6], m21 = projection[7], m22 = projection[8];
-
-        // Transformation du point du monde aux coordonnées homogènes de l'espace écran (clip space)
-        const clipX = m00 * xWorld + m01 * yWorld + m02;
-        const clipY = m10 * xWorld + m11 * yWorld + m12;
-        const clipW = m20 * xWorld + m21 * yWorld + m22;
-
-        // Normalisation des coordonnées homogènes
-        const ndcX = clipX / clipW;
-        const ndcY = clipY / clipW;
-
-        // Conversion des coordonnées NDC (Normalized Device Coordinates) aux coordonnées d'écran
-        const screenX = (1.0 + ndcX) * canvasWidth / 2.0;
-        const screenY = (1.0 - ndcY) * canvasHeight / 2.0;
-
-        return [Math.round(screenX), Math.round(screenY)];
-    }
-
-    function getProjection(canvasWidth, canvasHeight) {
-        // Créer une matrice 3x3 pour la projection
-        const projection = [
-            2 / canvasWidth, 0, 0,
-            0, -2 / canvasHeight, 0,
-            -1, 1, 1
-        ];
-        return projection;
-    }
-
     document.querySelectorAll(".easterEgg").forEach((element) => {
         element.addEventListener("click", (event) => {
             startEmojiFountain(event);
