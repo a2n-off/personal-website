@@ -270,9 +270,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (e.classList.contains('underlined')) {
                 introUndEntrance.to(e, {'--und-dur': '95%', stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'});
             }
-
-
-
         })
 
         /* get all the other text to animate */
@@ -296,6 +293,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     tl.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: baseDuration, ease: 'expoScale(0.5,7,none)'}, `<${0.03}`);
                 }
+                if (e.classList.contains('underlined')) {
+                    introUndEntrance.to(e, {'--und-dur': '95%', stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'});
+                }
             })
         })
 
@@ -316,6 +316,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     tl.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: baseDuration, ease: 'expoScale(0.5,7,none)'});
                 } else {
                     tl.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: baseDuration, ease: 'expoScale(0.5,7,none)'}, `<${0.03/elWords.length}`);
+                }
+                if (e.classList.contains('underlined')) {
+                    introUndEntrance.to(e, {'--und-dur': '95%', stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'});
                 }
             })
         })

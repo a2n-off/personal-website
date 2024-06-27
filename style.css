@@ -38,7 +38,27 @@ a > span, #email {
     position: relative; /* mandatory for having the right ::before size */
 }
 
-a > span::before, #email::before {
+a > span::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    bottom: -2px;
+    right: 0;
+    border-bottom: 2px solid var(--pri-color);
+    transition: all 0.3s;
+}
+
+.text-footer > a > span::before, nav a > span::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    bottom: 0;
+    right: 0;
+    border-bottom: 2px solid var(--pri-color);
+    transition: all 0.3s;
+}
+
+#email::before {
     content: '';
     position: absolute;
     width: 0;
@@ -350,7 +370,7 @@ a.hovered > span::before, #email.hovered::before {
     display: none;
 }
 
-#about > .content > p {
+#about > .content > p, #about > .content > ul {
     grid-column: 6/1;
     text-align: right;
 }
