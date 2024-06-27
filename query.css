@@ -160,5 +160,9 @@ html {
         text-align: right;
         cursor: pointer;
     }
+
+    #title > h5 {
+        grid-column: 2/9;
+    }
 }
 
