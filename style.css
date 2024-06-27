@@ -1,3 +1,4 @@
+/* in addition to dvh use this code give a very good dynamic size for mobile view */
 body {
     min-height: 100dvh;
     min-height: -webkit-fill-available;
@@ -6,6 +7,7 @@ body {
 html {
     height: -webkit-fill-available;
 }
+/**/
 
 body {
     --pri-color: #000000; /* text */
