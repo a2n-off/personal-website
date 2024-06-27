@@ -141,13 +141,22 @@ document.addEventListener("DOMContentLoaded", () => {
         const vec = new THREE.Vector3(pixelX, pixelY, -1);
         const proj = new THREE.Vector3(pixelX, pixelY, -1).project(camera);
         const unproj = new THREE.Vector3(pixelX, pixelY, -1).unproject(camera);
+        const calcx = pixelX / (window.innerHeight / 2) - 1;
+        const calcy = - pixelY / (window.innerWidth / 2) + 1;
+        const cvec = new THREE.Vector3(calcx, calcy, -1);
+        const cproj = new THREE.Vector3(calcx, calcy, -1).project(camera);
+        const cunproj = new THREE.Vector3(calcx, calcy, -1).unproject(camera);
         console.log('vec', vec)
         console.log('proj', proj)
         console.log('unproj', unproj)
+        console.log('calc', { calcx, calcy })
+        console.log('cvec', cvec)
+        console.log('cproj', cproj)
+        console.log('cunproj', cunproj)
 
         for (let i = 0; i < 50; i++) {
             const emojiMesh = new THREE.Mesh(emojiGeometry, emojiMaterial);
-            emojiMesh.position.set(1,1,1);
+            emojiMesh.position.set(cunproj.x, cunproj.y, -1);
             emojiMesh.userData.velocityX = Math.random() * 0.4 - 0.2;
             emojiMesh.userData.velocityY = Math.random() * 0.8 + 0.4;
             scene.add(emojiMesh);
