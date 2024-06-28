@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     let winIsLargerThan800 = window.innerWidth > 800;
+    let winIsSmallerThan600 = window.innerWidth <= 600;
+
     // define the default duration and delay of all animation
     const baseDelay = 0.1;
     const baseDuration = 0.8;
@@ -243,8 +245,10 @@ document.addEventListener('DOMContentLoaded', () => {
         intro.innerHTML = introWords.map((word) => {
             if (word === 'Product') {
                 return `<span class='letter underlined easterEgg pm' emoji='🚀'>${word}</span>`
-            } else if (word === 'Manager,') {
+            } else if (word === 'Manager,' && !winIsSmallerThan600) {
                 return `<span class='letter easterEgg' emoji='🚀'>${word}</span>`
+            } else if (word === 'Manager,' && winIsSmallerThan600) {
+                return `<span class='letter underlined easterEgg' emoji='🚀'>${word}</span>`
             } else if (word === 'dev.') {
                 return `<span class='letter underlined easterEgg dev' emoji='🧑‍💻'>${word}</span>`
             } else if (word === 'innovation,') {
@@ -264,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 introEntrance.to(e, {y: 0, stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'}, `<${0.03}`);
             }
             if (e.classList.contains('pm')) {
-                introUndEntrance.to(e, {'--pm-dur': '200%', stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'});
+                introUndEntrance.to(e, {'--pm-dur': `${!winIsSmallerThan600 ? 200 : 80}%`, stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'});
             } else if (e.classList.contains('dev')) {
                 introUndEntrance.to(e, {'--dev-dur': '80%', stagger: 0.05, autoAlpha: 1, duration: speedDuration, ease: 'expoScale(0.5,7,none)'});
             } else if (e.classList.contains('underlined')) {
@@ -637,7 +641,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const fixs = document.getElementsByClassName('fix-s');
         Array.from(fixs).forEach((fix) => {
             Array.from(fix.childNodes).forEach((node, i) => {
-                console.log(node)
                 if (node.nodeType === Node.TEXT_NODE) {
                     let br = document.createElement('br');
                     fix.replaceChild(br, fix.childNodes[i]);
@@ -663,9 +666,10 @@ document.addEventListener('DOMContentLoaded', () => {
      * reload for the mobile version
      */
     window.addEventListener("resize", () => {
-        if (winIsLargerThan800 !== window.innerWidth > 800) {
+        if (winIsLargerThan800 !== window.innerWidth > 800 || winIsSmallerThan600 !== window.innerWidth <= 600) {
             window.location.reload();
             winIsLargerThan800 = window.innerWidth > 800;
+            winIsSmallerThan600 = window.innerWidth <= 600;
         }
     })
 
