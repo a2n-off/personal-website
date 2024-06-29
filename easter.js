@@ -85,10 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const pixelX = event.offsetX + elem.x;
         const pixelY = event.offsetY + elem.y;
 
-        // debug
-        console.log('real coord', pixelX, pixelY);
-        drawHtmlSquare(pixelX, pixelY);
-
         const renderer = new THREE.WebGLRenderer({ alpha: true });
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -106,27 +102,14 @@ document.addEventListener("DOMContentLoaded", () => {
             transparent: true,
         });
 
-        const vec = new THREE.Vector3(pixelX, pixelY, -1);
-        const proj = new THREE.Vector3(pixelX, pixelY, -1).project(camera);
-        const unproj = new THREE.Vector3(pixelX, pixelY, -1).unproject(camera);
-        const calcx = pixelX / (window.innerHeight / 2) - 1;
-        const calcy = - pixelY / (window.innerWidth / 2) + 1;
-        const cvec = new THREE.Vector3(calcx, calcy, -1);
-        const cproj = new THREE.Vector3(calcx, calcy, -1).project(camera);
-        const cunproj = new THREE.Vector3(calcx, calcy, -1).unproject(camera);
-        console.log('vec', vec)
-        console.log('proj', proj)
-        console.log('unproj', unproj)
-        console.log('calc', { calcx, calcy })
-        console.log('cvec', cvec)
-        console.log('cproj', cproj)
-        console.log('cunproj', cunproj)
+        const calcx = pixelX - (window.innerWidth / 2) ;
+        const calcy = (window.innerHeight / 2) - pixelY;
 
         for (let i = 0; i < 50; i++) {
             const emojiMesh = new THREE.Mesh(emojiGeometry, emojiMaterial);
-            emojiMesh.position.set(cunproj.x, cunproj.y, -1);
-            emojiMesh.userData.velocityX = Math.random() * 0.4 - 0.2;
-            emojiMesh.userData.velocityY = Math.random() * 0.8 + 0.4;
+            emojiMesh.position.set(calcx, calcy, -1);
+            emojiMesh.userData.velocityX = (Math.random() - 0.5) * 22; // Random horizontal velocity
+            emojiMesh.userData.velocityY = Math.random() * 14 + 20; // Increased initial vertical velocity for fountain effect
             scene.add(emojiMesh);
             emojis.push(emojiMesh);
         }
@@ -139,11 +122,15 @@ document.addEventListener("DOMContentLoaded", () => {
             //console.log(`animate ${executionId}`)
             let stillAnimating = false;
             emojis.forEach((emoji) => {
-                // emoji.position.y += emoji.userData.velocityY;
-                // emoji.position.x += emoji.userData.velocityX;
-                // emoji.userData.velocityY -= 0.1; // gravity effect
+                emoji.position.y += emoji.userData.velocityY;
+                emoji.position.x += emoji.userData.velocityX;
+                emoji.userData.velocityY -= 0.45; // gravity effect
 
-                if (emoji.position.y > -window.innerHeight / 50) {
+                // check if emoji is visible
+                const m = 64; // margin
+                if (emoji.position.y > -window.innerHeight / 2 - m &&
+                    emoji.position.x > -window.innerWidth / 2 - m &&
+                    emoji.position.x < window.innerWidth / 2 + m) {
                     stillAnimating = true;
                 }
             });
@@ -159,6 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     window.cancelAnimationFrame(animId);
                 }, 10000);
             }
+
         }
 
         animate();
