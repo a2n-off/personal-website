@@ -23,5 +23,5 @@ document.addEventListener('DOMContentLoaded', function () {
         return newNumber;
     }
 
-    linkForFavicon.setAttribute(`href`, `data:image/svg+xml,${faviconTemplate(emojis[getUniqueRandomNumber(emojis.length)])}`);
+    linkForFavicon.setAttribute(`href`, `data:image/svg+xml,${faviconTemplate(emojis[getUniqueRandomNumber(emojis.length-1)])}`);
 });
