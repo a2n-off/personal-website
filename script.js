@@ -244,19 +244,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const introWords = intro.textContent.split(' ');
         intro.innerHTML = introWords.map((word) => {
             if (word === 'Product') {
-                return `<span class='letter underlined easterEgg pm' emoji='🚀'>${word}</span>`
+                return `<span class='letter underlined easterEgg pm easter-pointer' emoji='🚀'>${word}</span>`
             } else if (word === 'Manager,' && !winIsSmallerThan600) {
-                return `<span class='letter easterEgg' emoji='🚀'>${word}</span>`
+                return `<span class='letter easterEgg easter-pointer' emoji='🚀'>${word}</span>`
             } else if (word === 'Manager,' && winIsSmallerThan600) {
-                return `<span class='letter underlined easterEgg' emoji='🚀'>${word}</span>`
+                return `<span class='letter underlined easterEgg easter-pointer' emoji='🚀'>${word}</span>`
             } else if (word === 'dev.') {
-                return `<span class='letter underlined easterEgg dev' emoji='🧑‍💻'>${word}</span>`
+                return `<span class='letter underlined easterEgg dev easter-pointer' emoji='🧑‍💻'>${word}</span>`
             } else if (word === 'innovation,') {
-                return `<span class='letter underlined easterEgg inno' emoji='💥'>${word}</span>`
+                return `<span class='letter underlined easterEgg inno easter-pointer' emoji='💥'>${word}</span>`
             } else if (word === 'tech,') {
-                return `<span class='letter underlined easterEgg tech' emoji='🧑‍🔧'>${word}</span>`
+                return `<span class='letter underlined easterEgg tech easter-pointer' emoji='🧑‍🔧'>${word}</span>`
             } else if (word === 'design') {
-                return `<span class='letter underlined easterEgg design' emoji='🎨'>${word}</span>`
+                return `<span class='letter underlined easterEgg design easter-pointer' emoji='🎨'>${word}</span>`
             } else {
                 return `<span class='letter'>${word}</span>`
             }

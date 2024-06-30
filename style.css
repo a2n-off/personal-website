@@ -14,6 +14,7 @@ body {
     --sec-color: #E1DFDD; /* background */
     --ter-color: #787878; /* secondary text */
     --grid-color: rgba(0, 0, 0, 0.1);
+    --unde-color: rgba(0, 0, 0, 0.15);
     --blur-value: 10px;
     --mouse-color: var(--pri-color);
 }
@@ -22,6 +23,11 @@ body {
     background-color: var(--sec-color);
     color: var(--pri-color);
     margin-bottom: 2.5rem; /* add some space at the end of the view */
+    transition: color 0.5s ease, background-color 0.5s ease;
+}
+
+.easter-pointer {
+    cursor: pointer;
 }
 
 .only-s {
@@ -73,13 +79,13 @@ a.hovered > span::before, #email.hovered::before {
     width: 100%;
 }
 
-.link-list a::before {
-    content: url('arrow.svg');
-    display: inline-block;
-    position: relative;
-    width: 0.6rem;
-    margin-right: 0.5rem;
-}
+/*.link-list a::before {*/
+/*    content: url('arrow.svg');*/
+/*    display: inline-block;*/
+/*    position: relative;*/
+/*    width: 0.6rem;*/
+/*    margin-right: 0.5rem;*/
+/*}*/
 
 .secondary {
     font-size: 1rem;
@@ -502,7 +508,7 @@ a.hovered > span::before, #email.hovered::before {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 2px;
+    padding: 1rem;
 }
 
 .text-footer {
@@ -609,7 +615,7 @@ a.hovered > span::before, #email.hovered::before {
     width: var(--pm-dur);
     height: 14px;
     transform: skew(-12deg);
-    background: rgba(0, 0, 0, 0.15);
+    background: var(--unde-color);
     z-index: -1;
     transition: width 0.03s;
 }
@@ -624,7 +630,7 @@ a.hovered > span::before, #email.hovered::before {
     width: var(--dev-dur);
     height: 14px;
     transform: skew(-12deg);
-    background: rgba(0, 0, 0, 0.15);
+    background: var(--unde-color);
     z-index: -1;
     transition: width 0.03s;
 }
@@ -639,7 +645,7 @@ a.hovered > span::before, #email.hovered::before {
     width: var(--und-dur);
     height: 14px;
     transform: skew(-12deg);
-    background: rgba(0, 0, 0, 0.15);
+    background: var(--unde-color);
     z-index: -1;
     transition: width 0.03s;
 }
